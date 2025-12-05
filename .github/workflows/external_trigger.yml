@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   external-trigger-master:
+    if: github.repository != 'NujSuper/docker-openssh-server'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1

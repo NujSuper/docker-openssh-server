@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   manage-project:
+    if: github.repository != 'NujSuper/docker-openssh-server'
     permissions:
       issues: write
     uses: linuxserver/github-workflows/.github/workflows/issue-pr-tracker.yml@v1
