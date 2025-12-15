@@ -1,0 +1,24 @@
+name: Build Docker Image
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  docker-build:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Build, tag, and push the image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: local.test
+          ECR_REPOSITORY: 'ssh_bastion'
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
