@@ -11,35 +11,36 @@ permissions:
   contents: write
 
 jobs:
-  strategy:
-    matrix:
-      env: [dev, prod, test]
-    name: Build Docker
-    runs-on: ubuntu-latest
-    environment: ${{ matrix.env }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref }}
+  build-deploy:
+    strategy:
+      matrix:
+        env: [dev, prod, test]
+      name: Build Docker
+      runs-on: ubuntu-latest
+      environment: ${{ matrix.env }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v6
+          with:
+            ref: ${{ github.ref }}
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          aws-region: 'ap-southeast-2'
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-nuj-repository-access
-          role-session-name: NujPlatformAPISession
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v5
+          with:
+            aws-region: 'ap-southeast-2'
+            role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-nuj-repository-access
+            role-session-name: NujPlatformAPISession
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push the image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: 'ssh_bastion'
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }} .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
+        - name: Build, tag, and push the image to Amazon ECR
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: 'ssh_bastion'
+            IMAGE_TAG: latest
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }} .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
