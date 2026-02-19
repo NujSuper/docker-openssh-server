@@ -40,5 +40,5 @@ jobs:
           ECR_REPOSITORY: 'ssh_bastion'
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }} .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
+          docker build -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":${{ github.sha }} -t "$ECR_REGISTRY/$ECR_REPOSITORY":${{ github.ref_name }} .
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY" --all-tags
