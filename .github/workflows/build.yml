@@ -1,20 +1,17 @@
 name: Build Docker Image
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: write
+    inputs:
+      env:
+        required: true
+        type: string
 
 jobs:
   docker-build:
     name: Build Docker
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ inputs.env }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

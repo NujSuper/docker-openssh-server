@@ -1,0 +1,22 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  strategy:
+    matrix:
+      env: [dev, prod, test]
+  build:
+  name: Build
+  secrets: inherit
+  uses: ./.github/workflows/build.yml
+  with:
+    env: ${{ matrix.env }}
