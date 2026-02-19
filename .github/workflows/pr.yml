@@ -22,4 +22,4 @@ jobs:
           ECR_REPOSITORY: 'ssh_bastion'
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:latest" .
