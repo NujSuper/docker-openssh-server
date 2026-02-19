@@ -8,20 +8,19 @@ on:
 
 permissions:
   id-token: write
-  contents: write
+  contents: read
 
 jobs:
-  strategy:
-    matrix:
-      env: [dev, prod, test]
+  build-deploy:
+    strategy:
+      matrix:
+        env: [dev, test, prod]
     name: Build Docker
     runs-on: ubuntu-latest
     environment: ${{ matrix.env }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -41,5 +40,5 @@ jobs:
           ECR_REPOSITORY: 'ssh_bastion'
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }} .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
+          docker build -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":${{ github.sha }} -t "$ECR_REGISTRY/$ECR_REPOSITORY":${{ github.ref_name }} .
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY" --all-tags
