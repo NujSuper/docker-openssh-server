@@ -8,21 +8,19 @@ on:
 
 permissions:
   id-token: write
-  contents: write
+  contents: read
 
 jobs:
   build-deploy:
     strategy:
       matrix:
-        env: [dev, prod, test]
+        env: [dev, test, prod]
     name: Build Docker
     runs-on: ubuntu-latest
     environment: ${{ matrix.env }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
