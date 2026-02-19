@@ -11,10 +11,12 @@ permissions:
   contents: write
 
 jobs:
-  docker-build:
+  strategy:
+    matrix:
+      env: [dev, prod, test]
     name: Build Docker
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ matrix.env }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
