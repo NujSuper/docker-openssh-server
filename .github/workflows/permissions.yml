@@ -9,4 +9,4 @@ on:
 
 jobs:
   permission_check:
-    uses: linuxserver/github-workflows/.github/workflows/init-svc-executable-permissions.yml@v1
+    uses: linuxserver/github-workflows/.github/workflows/init-svc-executable-permissions.yml@5d69252151b995b99ea9d883b73e5be5a82d88cf # v1
